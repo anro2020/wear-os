@@ -1,16 +1,11 @@
 package com.example.wear_os
 
-import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.location.Geocoder
-import android.location.Location
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.example.wear_os.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -39,7 +34,6 @@ class MainActivity : Activity() {
 
         btn_ubicacion.setOnClickListener{
             obtenerUbicacion()
-
             textViewLatitud.text = "Latitud: \n${latitud}"
             textViewLongitud.text = "Longitud: \n${longitud}"
         }
