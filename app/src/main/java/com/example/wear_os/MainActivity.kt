@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.wear_os.databinding.ActivityMainBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -14,8 +15,8 @@ class MainActivity : Activity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var latitud = 0.0
-    private var longitud = 0.0
+    var val_latitud = 0.00
+    var val_longitud = 0.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +35,9 @@ class MainActivity : Activity() {
 
         btn_ubicacion.setOnClickListener{
             obtenerUbicacion()
-            textViewLatitud.text = "Latitud: \n${latitud}"
-            textViewLongitud.text = "Longitud: \n${longitud}"
+            request(val_latitud.toString(), val_longitud.toString())
+            textViewLatitud.text = "Latitud: \n${val_latitud}"
+            textViewLongitud.text = "Longitud: \n${val_longitud}"
         }
 
     }
@@ -49,9 +51,24 @@ class MainActivity : Activity() {
             return
         }
         task.addOnSuccessListener { if ( it != null) {
-            longitud = it.longitude
-            latitud = it.latitude
+            val_latitud = it.longitude
+            val_longitud = it.latitude
             //Toast.makeText(applicationContext, "${it.latitude}${it.longitude}", Toast.LENGTH_SHORT).show()
         }}
+    }
+
+    private fun request(latitud: String, longitud: String){
+        val apiService = RestApiService()
+        val ubicacionInfo = UbicacionData(
+            latitud = latitud,
+            longitud = longitud
+        )
+        apiService.nuevaUbicacion(ubicacionInfo){
+            if (it?.latitud != "0" || it?.longitud != "0") {
+                Toast.makeText(this, "Post enviado", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Fallo la peticion", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
